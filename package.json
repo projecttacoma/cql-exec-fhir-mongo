@@ -16,7 +16,9 @@
   },
   "author": "",
   "license": "Apache-2.0",
-  "dependencies": {},
+  "dependencies": {
+    "cql-exec-fhir": "github:projecttacoma/cql-exec-fhir"
+  },
   "homepage": "https://github.com/projecttacoma/cql-exec-fhir-mongo#readme",
   "devDependencies": {
     "cql-execution": "^2.4.0",
