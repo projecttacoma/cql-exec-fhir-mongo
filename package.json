@@ -16,13 +16,17 @@
   },
   "author": "",
   "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://github.com/projecttacoma/cql-exec-fhir-mongo/issues"
+  "dependencies": {
+    "cql-exec-fhir": "github:projecttacoma/cql-exec-fhir"
   },
   "homepage": "https://github.com/projecttacoma/cql-exec-fhir-mongo#readme",
   "devDependencies": {
+    "cql-execution": "^2.4.0",
     "eslint": "^8.13.0",
     "eslint-config-prettier": "^8.5.0",
     "prettier": "2.6.2"
+  },
+  "peerDependencies": {
+    "cql-execution": ">=2.4.0"
   }
 }
