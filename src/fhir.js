@@ -57,6 +57,7 @@ class Patient extends FHIRObject {
    * @param {string} profile link to a FHIR profile
    * @param {Object} retrieveDetails Structure of the information about an ELM retrieve
    */
+  // eslint-disable-next-line no-unused-vars
   findRecords(profile, retrieveDetails) {}
 
   // add current pat, next pat, for patient source, find records for patient class, load patient ids to pop array w strings (same as asyncpatsource)
