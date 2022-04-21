@@ -1,6 +1,6 @@
 # cql-exec-fhir-mongo
 
-This project establishes a FHIR-based data source module for use with the CQL Execution Engine. Currently, FHIR 1.0.2 (DSTU2), FHIR 3.0.0 (STU3), FHIR 4.0.0 ,and FHIR 4.0.1 (R4) are supported.
+A FHIR-based data source module for use with the CQL Execution Engine that interacts with a Mongo database.
 
 - [Installation](#installation)
 
@@ -43,7 +43,7 @@ npm run test
 
 ## Usage
 
-The FHIR Data Source expects each patient to be represented as a single FHIR Bundle containing all of the patient's relevant data. The FHIR Data Source queries Mongo to get FHIR data for execution.
+The FHIR Data Source expects each patient and their accompanying data exist in the Mongo database that is provided to the patient source. The FHIR Data Source queries Mongo to get FHIR data for execution.
 
 ## License
 
