@@ -1,0 +1,37 @@
+{
+  "name": "cql-exec-fhir-mongo",
+  "version": "1.0.0",
+  "description": "Provides a FHIR data provider for use with CQL",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint \"**/*.js\"",
+    "lint:fix": "eslint \"**/*.js\" --fix",
+    "prettier": "prettier --check \"**/*.js\"",
+    "prettier:fix": "prettier --write \"**/*.js\"",
+    "check": "npm run test && npm run lint && npm run prettier",
+    "test": "jest",
+    "test:coverage": "jest --collectCoverage",
+    "test:watch": "jest --watchAll",
+    "test:watch:coverage": "jest --watchAll --collectCoverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/projecttacoma/cql-exec-fhir-mongo.git"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "cql-exec-fhir": "github:projecttacoma/cql-exec-fhir"
+  },
+  "homepage": "https://github.com/projecttacoma/cql-exec-fhir-mongo#readme",
+  "devDependencies": {
+    "cql-execution": "^2.4.0",
+    "eslint": "^8.13.0",
+    "eslint-config-prettier": "^8.5.0",
+    "jest": "^27.5.1",
+    "prettier": "2.6.2"
+  },
+  "peerDependencies": {
+    "cql-execution": ">=2.4.0"
+  }
+}
