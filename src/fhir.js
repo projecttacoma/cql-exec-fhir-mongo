@@ -19,7 +19,7 @@ class PatientSource {
   /**
    * @return new Patient instance with patient data for current index
    */
-  currentPatient() {
+  async currentPatient() {
     // assume Mongo collections named after FHIR resource types
   }
 
@@ -27,7 +27,10 @@ class PatientSource {
    * Advance the current index to go to the next patient Id
    * @return call to currentPatient()
    */
-  nextPatient() {}
+  async nextPatient() {
+    this._index += 1;
+    return this.currentPatient();
+  }
 }
 
 /**
