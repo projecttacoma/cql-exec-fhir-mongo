@@ -1,15 +1,21 @@
 const { FHIRObject, load } = require('cql-exec-fhir');
+const FHIRv401XML = require('../modelInfos/fhir-modelinfo-4.0.1.xml.js');
 
 /**
  * Iterator for the patients provided to the execution engine
  */
 class PatientSource {
-  constructor(filePathOrXML, connectionUrl, shouldCheckProfile = false) {
-    // TODO: use connectionUrl to create instance of MongoClient
+  constructor(filePathOrXML, mongoConnection, shouldCheckProfile = false) {
     this._index = 0;
     this._patientIds = [];
+    this._mongoConnection = mongoConnection;
     this._shouldCheckProfile = shouldCheckProfile;
     this._modelInfo = load(filePathOrXML);
+  }
+
+  // Convenience factory method for getting a FHIR 4.0.1 (R4) Patient Source
+  static FHIRv401(connectionUrl, shouldCheckProfile = false) {
+    return new PatientSource(FHIRv401XML, connectionUrl, shouldCheckProfile);
   }
 
   loadPatientIds(ids) {
@@ -20,7 +26,12 @@ class PatientSource {
    * @return new Patient instance with patient data for current index
    */
   async currentPatient() {
-    // assume Mongo collections named after FHIR resource types
+    if (this._index < this._patientIds.length) {
+      // assume Mongo collections named after FHIR resource types
+      const patients = this._mongoConnection.db().collection('Patient');
+      const results = await patients.findOne({ id: this._patientIds[this._index] }, { projection: { _id: 0 } });
+      return new Patient(results, this._modelInfo, this._mongoConnection, this._shouldCheckProfile);
+    }
   }
 
   /**
@@ -28,8 +39,16 @@ class PatientSource {
    * @return call to currentPatient()
    */
   async nextPatient() {
-    this._index += 1;
-    return this.currentPatient();
+    if (this._index < this._patientIds.length) {
+      this._index++;
+      return this.currentPatient();
+    }
+  }
+  /**
+   * Resets the index back to 0
+   */
+  reset() {
+    this._index = 0;
   }
 }
 
@@ -37,7 +56,7 @@ class PatientSource {
  * Patient data object that implements logic for searching for records based on the Patient
  */
 class Patient extends FHIRObject {
-  constructor(patientData, modelInfo, connectionUrl, shouldCheckProfile = false) {
+  constructor(patientData, modelInfo, mongoConnection, shouldCheckProfile = false) {
     // TODO: use connectionUrl to create instance of MongoClient
     const patientClass = modelInfo.patientClassIdentifier
       ? modelInfo.patientClassIdentifier
@@ -51,7 +70,7 @@ class Patient extends FHIRObject {
       enumerable: false
     });
 
-    this._connectionUrl = connectionUrl;
+    this._mongoConnection = mongoConnection;
     this._shouldCheckProfile = shouldCheckProfile;
   }
 
