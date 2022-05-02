@@ -22,7 +22,6 @@
   "license": "Apache-2.0",
   "dependencies": {
     "cql-exec-fhir": "github:projecttacoma/cql-exec-fhir",
-    "dotenv": "^16.0.0",
     "mongodb": "^4.5.0"
   },
   "homepage": "https://github.com/projecttacoma/cql-exec-fhir-mongo#readme",
