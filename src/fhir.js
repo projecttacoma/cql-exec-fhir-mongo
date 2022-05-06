@@ -14,8 +14,8 @@ class PatientSource {
   }
 
   // Convenience factory method for getting a FHIR 4.0.1 (R4) Patient Source
-  static FHIRv401(connectionUrl, shouldCheckProfile = false) {
-    return new PatientSource(FHIRv401XML, connectionUrl, shouldCheckProfile);
+  static FHIRv401(mongoConnection, shouldCheckProfile = false) {
+    return new PatientSource(FHIRv401XML, mongoConnection, shouldCheckProfile);
   }
 
   loadPatientIds(ids) {
@@ -44,9 +44,6 @@ class PatientSource {
       return this.currentPatient();
     }
   }
-  /**
-   * Resets the index back to 0
-   */
   reset() {
     this._index = 0;
   }
