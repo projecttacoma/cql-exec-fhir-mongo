@@ -78,5 +78,16 @@ describe('Patient', () => {
 
     expect(records).toHaveLength(1);
   });
+
+  test('findRecords on Patient returns the patient', async () => {
+    const ps = PatientSource.FHIRv401(connection);
+    ps.loadPatientIds(TEST_PATIENT_IDS);
+    const patient = await ps.currentPatient();
+    const records = await patient.findRecords('Patient');
+
+    expect(records).toHaveLength(1);
+    expect(records[0]).toBeInstanceOf(FHIRObject);
+    expect(records[0]._json).toEqual(testPatients[0]);
+  });
   afterAll(testCleanup);
 });
