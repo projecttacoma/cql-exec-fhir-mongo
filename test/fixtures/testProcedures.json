@@ -1,0 +1,20 @@
+[
+  {
+    "resourceType": "Procedure",
+    "id": "testProcedureId1",
+    "subject": {
+      "type": "Patient",
+      "reference": "Patient/testId1"
+    }
+  },
+  {
+    "resourceType": "Procedure",
+    "id": "testProcedureId2",
+    "performer": {
+      "actor": {
+        "type": "Patient",
+        "reference": "Patient/testId1"
+      }
+    }
+  }
+]
