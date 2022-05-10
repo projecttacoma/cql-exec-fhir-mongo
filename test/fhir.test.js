@@ -61,7 +61,7 @@ describe('Patient', () => {
     expect(recordsJson).toEqual(expect.arrayContaining([testProcedures[0], testProcedures[1]]));
   });
 
-  test('findRecords on Procedure correctly returns no resources', async () => {
+  test('findRecords on Procedure correctly returns no resources when no Procedure resources reference patient', async () => {
     const ps = PatientSource.FHIRv401(connection);
     ps.loadPatientIds(TEST_PATIENT_IDS);
     const patient = await ps.nextPatient();
