@@ -1,3 +1,4 @@
+const { FHIRObject } = require('cql-exec-fhir/lib/fhir');
 const { MongoClient } = require('mongodb');
 
 const connection = new MongoClient('mongodb://localhost:27017');
@@ -23,4 +24,14 @@ const testSetup = async data => {
   await Promise.all(promises);
 };
 
-module.exports = { testSetup, connection };
+const testCleanup = async () => {
+  await db.dropDatabase();
+  await connection.close();
+};
+
+const convertToFhirObjects = (data, klass, modelInfo) => {
+  const classInfo = modelInfo.findClass(klass);
+  return data.map(d => new FHIRObject(d, classInfo, modelInfo));
+};
+
+module.exports = { testSetup, testCleanup, connection, convertToFhirObjects };
