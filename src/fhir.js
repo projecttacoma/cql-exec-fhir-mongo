@@ -6,17 +6,17 @@ const patientReferences = require('./patient-references.json');
  * Iterator for the patients provided to the execution engine
  */
 class PatientSource {
-  constructor(filePathOrXML, mongoConnection, shouldCheckProfile = false) {
+  constructor(filePathOrXML, mongoDb, shouldCheckProfile = false) {
     this._index = 0;
     this._patientIds = [];
-    this._mongoConnection = mongoConnection;
+    this._mongoDb = mongoDb;
     this._shouldCheckProfile = shouldCheckProfile;
     this._modelInfo = load(filePathOrXML);
   }
 
   // Convenience factory method for getting a FHIR 4.0.1 (R4) Patient Source
-  static FHIRv401(mongoConnection, shouldCheckProfile = false) {
-    return new PatientSource(FHIRv401XML, mongoConnection, shouldCheckProfile);
+  static FHIRv401(mongoDb, shouldCheckProfile = false) {
+    return new PatientSource(FHIRv401XML, mongoDb, shouldCheckProfile);
   }
 
   loadPatientIds(ids) {
@@ -29,9 +29,9 @@ class PatientSource {
   async currentPatient() {
     if (this._index < this._patientIds.length) {
       // assume Mongo collections named after FHIR resource types
-      const patients = this._mongoConnection.db().collection('Patient');
+      const patients = this._mongoDb.collection('Patient');
       const results = await patients.findOne({ id: this._patientIds[this._index] }, { projection: { _id: 0 } });
-      return new Patient(results, this._modelInfo, this._mongoConnection, this._shouldCheckProfile);
+      return new Patient(results, this._modelInfo, this._mongoDb, this._shouldCheckProfile);
     }
   }
 
@@ -54,7 +54,7 @@ class PatientSource {
  * Patient data object that implements logic for searching for records based on the Patient
  */
 class Patient extends FHIRObject {
-  constructor(patientData, modelInfo, mongoConnection, shouldCheckProfile = false) {
+  constructor(patientData, modelInfo, mongoDb, shouldCheckProfile = false) {
     // TODO: use connectionUrl to create instance of MongoClient
     const patientClass = modelInfo.patientClassIdentifier
       ? modelInfo.patientClassIdentifier
@@ -68,8 +68,13 @@ class Patient extends FHIRObject {
       enumerable: false
     });
 
-    this._mongoConnection = mongoConnection;
     this._shouldCheckProfile = shouldCheckProfile;
+
+    // Define as un-enumerable to allow serializability of FHIR objects
+    Object.defineProperty(this, '_mongoDb', {
+      value: mongoDb,
+      enumerable: false
+    });
   }
 
   /**
@@ -93,7 +98,7 @@ class Patient extends FHIRObject {
     const refKeys = patientReferences[resourceType];
 
     // Assumption here that the collection will be named the resource type
-    const dbCollection = this._mongoConnection.db().collection(resourceType);
+    const dbCollection = this._mongoDb.collection(resourceType);
     let records = [];
     // If the resource cannot reference Patient, return all resources in the collection
     if (!refKeys) {

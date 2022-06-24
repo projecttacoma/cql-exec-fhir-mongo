@@ -1,5 +1,5 @@
 const { PatientSource } = require('../src/fhir');
-const { testSetup, connection, testCleanup } = require('./setup');
+const { testSetup, db, testCleanup } = require('./setup');
 const { FHIRObject } = require('cql-exec-fhir');
 const testPatients = require('./fixtures/testPatients.json');
 const testProcedures = require('./fixtures/testProcedures.json');
@@ -11,7 +11,7 @@ describe('Patient Source', () => {
   beforeAll(async () => await testSetup(JSON.parse(JSON.stringify(testPatients))));
 
   test('Returns patient with current id on call to currentPatient()', async () => {
-    const ps = PatientSource.FHIRv401(connection);
+    const ps = PatientSource.FHIRv401(db);
     ps.loadPatientIds(TEST_PATIENT_IDS);
     const currentPatient = await ps.currentPatient();
     expect(ps._index).toEqual(0);
@@ -19,7 +19,7 @@ describe('Patient Source', () => {
   });
 
   test('Returns patient with next id on call to nextPatient()', async () => {
-    const ps = PatientSource.FHIRv401(connection);
+    const ps = PatientSource.FHIRv401(db);
     ps.loadPatientIds(TEST_PATIENT_IDS);
     const currentPatient = await ps.nextPatient();
     expect(ps._index).toEqual(1);
@@ -27,7 +27,7 @@ describe('Patient Source', () => {
   });
 
   test('Returns undefined on call to nextPatient() index is at end of patientIds array', async () => {
-    const ps = PatientSource.FHIRv401(connection);
+    const ps = PatientSource.FHIRv401(db);
     ps.loadPatientIds(TEST_PATIENT_IDS);
     await ps.nextPatient();
     const undef = await ps.nextPatient();
@@ -35,7 +35,7 @@ describe('Patient Source', () => {
   });
 
   test('Reset sets index back to 0', async () => {
-    const ps = PatientSource.FHIRv401(connection);
+    const ps = PatientSource.FHIRv401(db);
     ps.loadPatientIds(TEST_PATIENT_IDS);
     await ps.nextPatient();
     ps.reset();
@@ -48,7 +48,7 @@ describe('Patient Source', () => {
 describe('Patient', () => {
   beforeAll(async () => await testSetup(JSON.parse(JSON.stringify(ALL_TEST_RESOURCES))));
   test('findRecords on Procedure returns all valid procedure resources', async () => {
-    const ps = PatientSource.FHIRv401(connection);
+    const ps = PatientSource.FHIRv401(db);
     ps.loadPatientIds(TEST_PATIENT_IDS);
     const patient = await ps.currentPatient();
     const records = await patient.findRecords('Procedure');
@@ -62,7 +62,7 @@ describe('Patient', () => {
   });
 
   test('findRecords on Procedure correctly returns no resources when no Procedure resources reference patient', async () => {
-    const ps = PatientSource.FHIRv401(connection);
+    const ps = PatientSource.FHIRv401(db);
     ps.loadPatientIds(TEST_PATIENT_IDS);
     const patient = await ps.nextPatient();
     const records = await patient.findRecords('Procedure');
@@ -71,7 +71,7 @@ describe('Patient', () => {
   });
 
   test('findRecords on Library correctly returns all Libraries', async () => {
-    const ps = PatientSource.FHIRv401(connection);
+    const ps = PatientSource.FHIRv401(db);
     ps.loadPatientIds(TEST_PATIENT_IDS);
     const patient = await ps.currentPatient();
     const records = await patient.findRecords('Library');
@@ -80,7 +80,7 @@ describe('Patient', () => {
   });
 
   test('findRecords on Patient returns the patient', async () => {
-    const ps = PatientSource.FHIRv401(connection);
+    const ps = PatientSource.FHIRv401(db);
     ps.loadPatientIds(TEST_PATIENT_IDS);
     const patient = await ps.currentPatient();
     const records = await patient.findRecords('Patient');
