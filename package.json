@@ -1,8 +1,8 @@
 {
   "name": "cql-exec-fhir-mongo",
   "version": "1.0.0",
-  "description": "Provides a FHIR data provider for use with CQL",
-  "main": "index.js",
+  "description": "Provides a MongoDB-based data provider for use with CQL",
+  "main": "src/index.js",
   "scripts": {
     "lint": "eslint \"**/*.js\"",
     "lint:fix": "eslint \"**/*.js\" --fix",

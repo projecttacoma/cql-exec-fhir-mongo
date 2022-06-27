@@ -34,4 +34,4 @@ const convertToFhirObjects = (data, klass, modelInfo) => {
   return data.map(d => new FHIRObject(d, classInfo, modelInfo));
 };
 
-module.exports = { testSetup, testCleanup, connection, convertToFhirObjects };
+module.exports = { testSetup, testCleanup, db, convertToFhirObjects };
