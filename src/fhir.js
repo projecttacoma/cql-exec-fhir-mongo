@@ -55,7 +55,6 @@ class PatientSource {
  */
 class Patient extends FHIRObject {
   constructor(patientData, modelInfo, mongoDb, shouldCheckProfile = false) {
-    // TODO: use connectionUrl to create instance of MongoClient
     const patientClass = modelInfo.patientClassIdentifier
       ? modelInfo.patientClassIdentifier
       : modelInfo.patientClassName;
