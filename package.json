@@ -33,6 +33,6 @@
     "prettier": "2.6.2"
   },
   "peerDependencies": {
-    "cql-execution": ">=2.4.0"
+    "cql-execution": "^3.0.0-beta"
   }
 }
