@@ -26,7 +26,7 @@
   },
   "homepage": "https://github.com/projecttacoma/cql-exec-fhir-mongo#readme",
   "devDependencies": {
-    "cql-execution": "^2.4.0",
+    "cql-execution": "^3.0.0-beta.2",
     "eslint": "^8.13.0",
     "eslint-config-prettier": "^8.5.0",
     "jest": "^27.5.1",
